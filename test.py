@@ -14,8 +14,6 @@ arguments = sys.argv
 bpm = int(arguments[1])
 samplingRate = int(arguments[2])
 mypath = str(arguments[3])
-iterations = int(arguments[4])
-batchSize = int(arguments[5])
 
 classes,dataX,dataYa,dataY = util.processAudioForTest(bpm,samplingRate,mypath)
 
