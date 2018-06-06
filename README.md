@@ -27,4 +27,5 @@ two files file1.wav and file2.wav, then there will be two classes that the CNN w
 `$ python test.py 'bpm' 'sampling rate' 'audio path'`
 
 ####Example
+`python train.py 240 44100 audio/ 1000 150`
 `python test.py 240 44100 audio/`
