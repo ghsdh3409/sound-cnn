@@ -12,7 +12,9 @@ def oneHotIt(Y):
 	return OHX
 
 def processAudio(bpm,samplingRate,mypath):
+	print mypath
 	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+	print onlyfiles
 	classes = len(onlyfiles)
 
 	dataList = []
@@ -53,3 +55,42 @@ def processAudio(bpm,samplingRate,mypath):
 	testY = oneHotIt(testYa)
 	valY = oneHotIt(valYa)
 	return classes,trainX,trainYa,valX,valY,testX,testY
+
+def processAudioForTest(bpm,samplingRate,mypath):
+	print mypath
+	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+	print onlyfiles
+	classes = len(onlyfiles)
+
+	dataList = []
+	labelList = []
+	for ix,audioFile in enumerate(onlyfiles):
+		audData = scipy.io.wavfile.read(mypath+audioFile)
+		seconds = audData[1][:,1].shape[0]/samplingRate
+		samples = (seconds/60) * bpm
+		audData = np.reshape(audData[1][:,1][0:samples*((seconds*samplingRate)/samples)],[samples,(seconds*samplingRate)/samples])
+		for data in audData:
+			dataList.append(data)
+		labelList.append(np.ones([samples,1])*ix)
+
+	Ys = np.concatenate(labelList)
+
+	specX = np.zeros([len(dataList),1024])
+	xindex = 0
+	for x in dataList:
+		work = matplotlib.mlab.specgram(x)[0]
+		worka = work[0:60,:]
+		worka = scipy.misc.imresize(worka,[32,32])
+		worka = np.reshape(worka,[1,1024])
+		specX[xindex,:] = worka
+		xindex +=1
+
+	split1 = specX.shape[0] - specX.shape[0]/20
+	split2 = (specX.shape[0] - split1) / 2
+
+	formatToUse = specX
+	Data = np.concatenate((formatToUse,Ys),axis=1)
+	# DataShuffled = np.random.permutation(Data)
+	dataX,dataYa = np.hsplit(Data,[-1])
+	dataY = oneHotIt(dataYa)
+	return classes,dataX,dataYa,dataY
