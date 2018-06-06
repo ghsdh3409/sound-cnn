@@ -12,9 +12,7 @@ def oneHotIt(Y):
 	return OHX
 
 def processAudio(bpm,samplingRate,mypath):
-	print mypath
 	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-	print onlyfiles
 	classes = len(onlyfiles)
 
 	dataList = []
@@ -57,9 +55,7 @@ def processAudio(bpm,samplingRate,mypath):
 	return classes,trainX,trainYa,valX,valY,testX,testY
 
 def processAudioForTest(bpm,samplingRate,mypath):
-	print mypath
 	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-	print onlyfiles
 	classes = len(onlyfiles)
 
 	dataList = []
