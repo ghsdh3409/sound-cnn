@@ -90,3 +90,31 @@ def processAudioForTest(bpm,samplingRate,mypath):
 	dataX,dataYa = np.hsplit(Data,[-1])
 	dataY = oneHotIt(dataYa)
 	return classes,dataX,dataYa,dataY
+
+def processAudioForPrediction(bpm,samplingRate,mypath):
+	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+
+	dataList = []
+	for audioFile in onlyfiles:
+		audData = scipy.io.wavfile.read(mypath+audioFile)
+		seconds = audData[1][:,1].shape[0]/samplingRate
+		samples = (seconds/60) * bpm
+		audData = np.reshape(audData[1][:,1][0:samples*((seconds*samplingRate)/samples)],[samples,(seconds*samplingRate)/samples])
+		for data in audData:
+			dataList.append(data)
+
+	specX = np.zeros([len(dataList),1024])
+	xindex = 0
+	for x in dataList:
+		work = matplotlib.mlab.specgram(x)[0]
+		worka = work[0:60,:]
+		worka = scipy.misc.imresize(worka,[32,32])
+		worka = np.reshape(worka,[1,1024])
+		specX[xindex,:] = worka
+		xindex +=1
+
+	split1 = specX.shape[0] - specX.shape[0]/20
+	split2 = (specX.shape[0] - split1) / 2
+
+	dataX = specX
+	return dataX

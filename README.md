@@ -23,9 +23,36 @@ two files file1.wav and file2.wav, then there will be two classes that the CNN w
 `batch size` is most often set to 100 ~ 200.
 
 ### Test
+This tests trained model with follwoing arguments:
 
 `$ python test.py 'bpm' 'sampling rate' 'audio path'`
 
+This requires the same number of class files used in training. For example, if you trained two classes like class1.wav, class2.wav, you need to two classes file in the test.
+
+### Prediction
+This predict unlabeled dataset using trained model with following arguments:
+
+`$ python test.py 'bpm' 'sampling rate' 'audio path' 'the number of classes`
+
+`the number of classes` should be the same number of classes used in training.
+
+This conducts only prediction. Thus, this does not require label. Thus, the files don't need to be splited as class.
+
 ####Example
-`python train.py 240 44100 audio/ 1000 150`
-`python test.py 240 44100 audio/`
+
+```
+audio/train/
+  class1.wav
+  class2.wav
+audio/test/
+  class1.wav
+  class2.wav
+audio/prediction/
+  class1-class2.wav
+```
+
+`python train.py 240 44100 audio/train/ 1000 150`
+
+`python test.py 240 44100 audio/test/`
+
+`python test.py 240 44100 audio/prediction/ 2`
